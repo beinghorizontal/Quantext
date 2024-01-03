@@ -9,7 +9,7 @@ from zipfile import ZipFile
 import numpy as np
 
 path = 'd:/demos/storage/hl'
-dayback = 1
+dayback = 0
 
 date_list = []
 symbol_list = []
