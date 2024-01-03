@@ -1,12 +1,11 @@
-import ast
 import datetime
-import re
-import time
-from io import StringIO
-
 import numpy as np
 import pandas as pd
 import requests
+from io import BytesIO
+from zipfile import ZipFile
+
+path = 'd:/demos/storage/hl'
 
 dayback = 0  # To download historical data from current date after market hours put dayback = -1
 date_list = []
@@ -19,6 +18,8 @@ low_list = []
 close_list = []
 qty_list = []
 trades_list = []
+newhs = []
+newls = []
 
 for i in range(0, 90):  # You can increase this period if you want, replace 90 with higher number, but I haven't tested
     try:
@@ -27,8 +28,12 @@ for i in range(0, 90):  # You can increase this period if you want, replace 90 w
         dt_1 = datetime.date.today() - datetime.timedelta(dayback)  # 1 for y'day and 0 for today
         day_nse = dt_1.strftime("%d%m%y")
         # raw_url = "https://nsearchives.nseindia.com/archives/equities/mkt/MA221223.csv"
+        # raw_url_hl= "https://nsearchives.nseindia.com/archives/equities/bhavcopy/pr/PR291223.zip"
+
 
         url = "https://nsearchives.nseindia.com/archives/equities/mkt/MA" + day_nse + ".csv"
+        urlHL = "https://nsearchives.nseindia.com/archives/equities/bhavcopy/pr/PR" + day_nse + ".zip"
+
         headers = {'Connection': 'keep-alive',
                    'authority': 'www.nseindia.com',
                    'path': '/api/marketStatus',
@@ -39,7 +44,18 @@ for i in range(0, 90):  # You can increase this period if you want, replace 90 w
                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
 
         req = requests.get(url, headers=headers)
-        if req.status_code == 200:
+        response = requests.get(urlHL, headers=headers)
+
+        if req.status_code == 200 and response.status_code==200:
+            with ZipFile(BytesIO(response.content)) as zip_file:
+                # Extract all files in the zip to a temporary directory
+                zip_file.extractall(path)
+
+            csv_path = path + '/HL' + day_nse + '.csv'
+            dfHL = pd.read_csv(csv_path)
+            dfHL['numeric'] = np.where(dfHL['NEW_STATUS'] == 'H', 1, 0)
+            newh = dfHL['numeric'].sum()
+            newl = len(dfHL) - newh
 
             list_date = req.text.split('\n')
             df = pd.DataFrame(list_date)
@@ -63,7 +79,10 @@ for i in range(0, 90):  # You can increase this period if you want, replace 90 w
             qty = float(df.iloc[4, 0].split(",")[2])
             trades = float(df.iloc[5, 0].split(",")[2])
 
+
             # append to lists
+            newhs.append(newh)
+            newls.append(newl)
             date_list.append(date_obj)
             symbol_list.append(sym)
             open_list.append(o)
@@ -85,7 +104,7 @@ df1 = pd.DataFrame({'date': date_list, 'symbol_list': symbol_list,
                     'dec_list': dec_list, 'open_list': open_list,
                     'high_list': high_list, 'low_list': low_list,
                     'close_list': close_list, 'qty_list': qty_list,
-                    'trades_list': trades_list})
+                    'trades_list': trades_list,'new_high':newhs, 'new_low':newls})
 
 # df1 = df1.set_index('date')
 df2 = df1.sort_index(ascending=False)
