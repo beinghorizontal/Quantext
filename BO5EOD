@@ -1,0 +1,47 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © narcissistrader
+
+//@version=5
+
+strategy('BreakOut5EOD', overlay = true, commission_type = strategy.commission.percent, commission_value = 0.002)
+
+// limiot historical data
+useDateFilter = input.bool(true, title="Filter Date Range of Backtest",
+     group="Backtest Time Period")
+backtestStartDate = input.time(timestamp("1 Jan 2018"), 
+     title="Start Date", group="Backtest Time Period",
+     tooltip="This start date is in the time zone of the exchange " + 
+     "where the chart's instrument trades. It doesn't use the time " + 
+     "zone of the chart or of your computer.")
+
+inTradeWindow = not useDateFilter or (time >= backtestStartDate)
+
+h1 = ta.highest(high,1)
+h2 = ta.highest(high[1], 5)
+long_position = ta.crossover(h1, h2)
+
+
+entry_price = close
+percent_stop = 4
+percent_profit = 10
+stop_loss_price = (1 - percent_stop / 100.) * entry_price 
+take_profit_price = (1 + percent_profit / 100.) * entry_price 
+
+stop_loss_in_ticks = (entry_price - stop_loss_price) / syminfo.mintick
+take_profit_in_ticks = (take_profit_price - entry_price) / syminfo.mintick
+
+if long_position and strategy.position_size == 0 and inTradeWindow
+    strategy.entry("buy", strategy.long)
+    strategy.exit("buy", loss = stop_loss_in_ticks, profit = take_profit_in_ticks, comment_loss = "SL Long", comment_profit = "TP Long")
+
+//l1 = ta.lowest(low, 1)
+//l2 = ta.lowest(low[1],5)
+
+//if ta.crossover(l2,l1)
+//    strategy.close_all()
+
+//short_tp_price = strategy.position_avg_price * (1 - tp_per)
+//short_sl_price = strategy.position_avg_price * (1 + sl_per)
+
+//strategy.exit("Short Exit", "Short", stop=short_sl_price, limit=short_tp_price)
+
