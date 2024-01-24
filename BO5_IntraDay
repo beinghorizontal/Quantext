@@ -1,0 +1,79 @@
+//@version=5
+
+strategy('BO5', overlay = true, commission_type = strategy.commission.percent, commission_value = 0.002)
+//indicator('bo5_sys', overlay = true)
+
+sessionInput = input.session("0915-0920")
+
+var float p = 0
+p += 1
+
+sessionBegins(sess) =>
+    t = time("", sess)
+    timeframe.isintraday and (not barstate.isfirst) and na(t[1]) and not na(t)
+
+var float hi = na
+var float lo = na
+
+if sessionBegins(sessionInput)
+    hi := high
+    lo := low
+    p := 0
+
+//plot(p, "lo",color.white, 2, plot.style_line)
+
+h1 = ta.highest(high,1)
+h2 = ta.highest(high[1], 5)
+congestion = close[1]<high[2] and close[1] > low[2] and close[2]<high[3] and close[2] > low[3] and close[3]<high[4] and close[3] > low[4] 
+entry_price = close
+percent_stop = 0.5
+percent_profit = 10
+stop_loss_price = (1 - percent_stop / 100.) * entry_price 
+take_profit_price = (1 + percent_profit / 100.) * entry_price 
+
+stop_loss_in_ticks = (entry_price - stop_loss_price) / syminfo.mintick
+take_profit_in_ticks = (take_profit_price - entry_price) / syminfo.mintick
+
+stop_loss_price_short = (1 + percent_stop / 100.) * entry_price 
+take_profit_price_short = (1 - percent_profit / 100.) * entry_price 
+
+stop_loss_in_ticks_short = (stop_loss_price_short - entry_price   ) / syminfo.mintick
+take_profit_in_ticks_short = (entry_price - take_profit_price_short ) / syminfo.mintick
+
+//filter = ta.atr(30)
+if ta.crossover(h1, h2) and p>5 and p <= 19 and congestion
+    strategy.entry("sell", strategy.short)
+    strategy.exit("sell", loss = stop_loss_in_ticks_short, profit = take_profit_in_ticks_short, comment_loss = "SL Short", comment_profit = "TP Short")
+    //label.new(bar_index,low,str.tostring(stop_loss_price_short))
+    //label.new(bar_index,low,str.tostring(int(filter)))
+
+
+l1 = ta.lowest(low, 1)
+l2 = ta.lowest(low[1],5)
+
+
+if ta.crossover(l2,l1) and p>5 and p <= 19 and congestion
+    strategy.entry('buy',strategy.long)
+    strategy.exit("buy", loss = stop_loss_in_ticks, profit = take_profit_in_ticks, comment_loss = "SL Long", comment_profit = "TP Long")
+
+
+//plot(hour,"",color.orange)
+if hour >= 15.00
+    strategy.close_all()
+
+// Signals
+
+//long  = ta.crossover(h1, h2)
+//short = ta.crossunder(l2, l1)
+
+// Entry & Exit 
+//long_entry  = long  ? 1 : 0
+//long_exit   = short ? 1 : 0
+//short_entry = short ? 1 : 0
+//short_exit  = long  ? 1 : 0
+
+// Plot The Output
+//plot(long_entry,  "Long Entry",  display=display.data_window, editable=false)
+//plot(long_exit,   "Long Exit",   display=display.data_window, editable=false)
+//plot(short_entry, "Short Entry", display=display.data_window, editable=false)
+//plot(short_exit,  "Short Exit",  display=display.data_window, editable=false)
