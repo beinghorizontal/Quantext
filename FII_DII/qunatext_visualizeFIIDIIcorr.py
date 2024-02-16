@@ -3,7 +3,7 @@ from scipy.stats import pointbiserialr
 import plotly.express as px
 from plotly.offline import plot
 
-# C, for historical data
+# C for historical data
 
 
 df = pd.read_csv('D:/demos/nfAllHist2.csv')
