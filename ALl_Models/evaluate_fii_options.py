@@ -8,8 +8,8 @@ from sklearn.linear_model import LogisticRegression
 import plotly.graph_objs as go
 from plotly.offline import plot
 from plotly.subplots import make_subplots
-from option_vis_corr_2 import get_options
-from fii_vis_corr_2 import get_fii
+from def_get_option import get_options
+from def_get_fii import get_fii
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.ensemble import RandomForestClassifier
 "// concat"
