@@ -16,7 +16,7 @@ def get_data(symbol_name="NIFTY", history=10, current_day=0, token=1):
     dayback = history
     fromday = (datetime.date.today() - datetime.timedelta(dayback)).strftime('%Y-%m-%d')
     curday = (datetime.date.today() - datetime.timedelta(current_day)).strftime('%Y-%m-%d')
-    root = "Z:/kite/"
+    root = "Drive:/Path_you_choose/"
 #%%
     file_names = ['kite_userid.txt', 'kite_pass.txt', 'kite_totp.txt']
     credentials = []
@@ -45,11 +45,5 @@ def get_data(symbol_name="NIFTY", history=10, current_day=0, token=1):
     data=data['candles']
     df=pd.DataFrame(data)
     df.columns=['DateTime','Open','High','Low','Close','Volume','OpenI']
-    # df2=df.dt.str.split('T',expand=True)
-    # df3=df[['o','h','l','c','v','oi']]
-    # mdf=pd.concat([df2,df3],axis=1)
-    # mdf.columns=['Date','Time','Open','High','Low','Close','Volume','OpenI']
-    # mdf['Time'] = mdf['Time'].astype(str).str[:-5]
     return df
-# mdf.to_csv('d:/filePath/niftyf.csv', index=False)
 
