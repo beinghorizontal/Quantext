@@ -22,7 +22,7 @@ def kitelogin():
 
    """
 #%%
-    root = "Z:/kite/"  # Replace with desire location
+    root = "Drive:/my_path/"  # Replace with desire location
     file_names = ['kite_userid.txt', 'kite_pass.txt', 'kite_totp.txt']  # In above location make these 3 text files
     credentials = []
     for file in file_names:
@@ -38,15 +38,11 @@ def kitelogin():
     if headless:
             options.add_argument('--headless')
 #%%
-    # options.add_argument("start-maximized")
     driver = webdriver.Chrome(options=options)
-    # driver.set_window_size(1700, 1080)
 
     driver.get('https://kite.zerodha.com/')
     wait = WebDriverWait(driver, 20)
 
-    # actionChain = webdriver.ActionChains(driver)
-    # actionChain.key_down(Keys.TAB).key_up(Keys.TAB).perform()
     wait.until(EC.presence_of_element_located((By.XPATH, '//input[@type="text"]'))) \
         .send_keys(credentials[0])
     wait.until(EC.presence_of_element_located((By.XPATH, '//input[@type="password"]'))) \
@@ -79,4 +75,3 @@ def kitelogin():
     time.sleep(1)
     driver.close()
     driver.quit()
-# kitelogin()
