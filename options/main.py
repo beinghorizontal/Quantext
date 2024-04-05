@@ -338,7 +338,7 @@ def run_chart(dayback=0):
     # for 1st monitor write monitor_index = 0, for 2nd write 1 and for third write 3. 
     # I am setting the default to 0 so it won't throw any error, and if you modify you can do that accordingly
     # To check the monitor number in Windows, press Windows and write the display setting, the 1st option will be duplicate or extend.. click that, then click the identify tab. monitor number will show up on each screen
-    monitor_index = 2
+    monitor_index = 0
     monitors = get_monitors()
     chosen_monitor = monitors[monitor_index]
     screen_width = chosen_monitor.width
