@@ -8,7 +8,7 @@ def get_holidays():
 
     page = requests.get(url, headers=headers)
     data = ast.literal_eval(page.text)
-    df_holidays = pd.DataFrame(data['CBM'])
+    df_holidays = pd.DataFrame(data['CM'])
 
     return df_holidays
 
