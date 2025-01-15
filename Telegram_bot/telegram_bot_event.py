@@ -65,7 +65,7 @@ def get_country_names():
     return unique_countries_str
 
 
-with open('/home/pi/Scripts/telegram_credentials.txt', 'r') as f:
+with open('/your/telegram/credentials/file_path.txt', 'r') as f:
     credentials = f.read().splitlines()
 
 TELEGRAM_BOT_TOKEN = credentials[0]
