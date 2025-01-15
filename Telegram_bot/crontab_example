@@ -1,0 +1,1 @@
+48 20 * * 1-5 export DISPLAY=:0 && /home/pi/auto/telegram_ec_event_push.sh &>> /home/pi/auto/cron.log
