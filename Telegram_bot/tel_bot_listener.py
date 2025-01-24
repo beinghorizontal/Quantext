@@ -1,3 +1,4 @@
+# for documentation check YT channel youtube.com/@quantext
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 from eventOnDemand import event
