@@ -1,3 +1,4 @@
+# pip install backtesting
 from plotly.offline import plot
 import plotly.graph_objects as go
 import numpy as np
