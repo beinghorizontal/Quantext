@@ -14,8 +14,8 @@ Features:
     - Market data export to text file
     - Interactive Plotly chart with hover information
 
-Author: [Your Name]
-Date: 2025
+Author: Alex ( https://www.youtube.com/@quantext )
+Date: 2025-11-14
 """
 
 from datetime import timedelta
@@ -369,3 +369,4 @@ print(f"Saving chart to {OUTPUT_IMAGE_FILE}...")
 fig.write_image(OUTPUT_IMAGE_FILE, width=OUTPUT_IMAGE_WIDTH, height=OUTPUT_IMAGE_HEIGHT)
 
 print("Complete!")
+
